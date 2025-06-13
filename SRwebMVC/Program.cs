@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using SRwebMVC.Models;
+using SRwebMVC.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
