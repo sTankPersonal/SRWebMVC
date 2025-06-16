@@ -11,5 +11,6 @@
         public decimal Amount { get; set; }
         public int QuantityId { get; set; }
         public required Quantity Quantity { get; set; }
+               
     }
 }

@@ -1,19 +1,36 @@
 ﻿@using SRwebMVC.Entities
 @using SRwebMVC.Models.DTOs
-@model List<SRwebMVC.Models.DTOs.RecipeDto>
+@model SRwebMVC.Models.ViewModels.RecipeListViewModel
 @{
     ViewData["Title"] = "Recipe Lists";
 }
 
 <h2>Recipe List</h2>
 
+<form method="get" asp-action="Index" class="mb-3">
+    <div class="row g-2">
+        <div class="col">
+            <input type="text" name="searchName" value="@Model.SearchName" class="form-control" placeholder="Recipe Name" />
+        </div>
+        <div class="col">
+            <input type="text" name="searchIngredient" value="@Model.SearchIngredient" class="form-control" placeholder="Ingredient" />
+        </div>
+        <div class="col">
+            <input type="text" name="searchCategory" value="@Model.SearchCategory" class="form-control" placeholder="Category" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </div>
+</form>
+
 <a asp-controller="Recipe" asp-action="Create" class="btn btn-primary mb-3">
     Create New Recipe
 </a>
 
-@if (Model.Count == 0)
+@if (Model.Recipes.Count == 0)
 {
-    <p>No Recipies.</p>
+    <p>No Recipes.</p>
 }
 else
 {
@@ -28,7 +45,7 @@ else
             </tr>
         </thead>
         <tbody>
-        @foreach (RecipeDto recipe in Model)
+        @foreach (RecipeDto recipe in Model.Recipes)
         {
             <tr>
                 <td>@recipe.Name</td>
@@ -48,6 +65,7 @@ else
                 <td>@(recipe.PrepTime/60)h @(recipe.PrepTime%60)min</td>
                 <td>@(recipe.CookTime/60)h @(recipe.CookTime%60)min</td>
                 <td>
+                    <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-sm btn-info">View</a>
                     <a asp-controller="Recipe" asp-action="Edit" asp-route-id="@recipe.Id" class="btn btn-sm btn-warning">Edit</a>
                     <a asp-controller="Recipe" asp-action="Delete" asp-route-id="@recipe.Id" class="btn btn-sm btn-danger">Delete</a>
                 </td>
@@ -55,4 +73,34 @@ else
         }
         </tbody>
     </table>
+
+    <nav>
+        <ul class="pagination">
+            @if (Model.HasPreviousPage)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-searchName="@Model.SearchName"
+                       asp-route-searchIngredient="@Model.SearchIngredient"
+                       asp-route-searchCategory="@Model.SearchCategory"
+                       asp-route-pageNumber="@(Model.PageNumber - 1)"
+                       asp-route-pageSize="@Model.PageSize">Previous</a>
+                </li>
+            }
+            <li class="page-item active"><span class="page-link">@Model.PageNumber</span></li>
+            @if (Model.HasNextPage)
+            {
+                <li class="page-item">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-searchName="@Model.SearchName"
+                       asp-route-searchIngredient="@Model.SearchIngredient"
+                       asp-route-searchCategory="@Model.SearchCategory"
+                       asp-route-pageNumber="@(Model.PageNumber + 1)"
+                       asp-route-pageSize="@Model.PageSize">Next</a>
+                </li>
+            }
+        </ul>
+    </nav>
 }

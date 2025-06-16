@@ -16,6 +16,7 @@ using SRwebMVC.Models.DTOs;
  * PATCH:
  * Add a new ingredient to a recipe
  * Add a new category to a recipe
+ * Add a new step to a recipe
  * Edit an existing recipe
  * 
  * DELETE:
@@ -47,11 +48,11 @@ namespace SRwebMVC.Controllers.API
                 .Include(r => r.RecipeCategories).ThenInclude(rc => rc.Category);
 
             if (!string.IsNullOrWhiteSpace(recipeName))
-                query = query.Where(r => r.Name.Contains(recipeName));
+                query = query.Where(r => r.Name.ToLower().Contains(recipeName.ToLower()));
             if (!string.IsNullOrWhiteSpace(ingredientName))
-                query = query.Where(r => r.RecipeIngredients.Any(ri => ri.Ingredient.Name.Contains(ingredientName)));
+                query = query.Where(r => r.RecipeIngredients.Any(ri => ri.Ingredient.Name.ToLower().Contains(ingredientName.ToLower())));
             if (!string.IsNullOrWhiteSpace(categoryName))
-                query = query.Where(r => r.RecipeCategories.Any(rc => rc.Category.Name.Contains(categoryName)));
+                query = query.Where(r => r.RecipeCategories.Any(rc => rc.Category.Name.ToLower().Contains(categoryName.ToLower())));
 
             query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
@@ -250,6 +251,27 @@ namespace SRwebMVC.Controllers.API
             recipe.PrepTime = dto.PrepTime;
             recipe.CookTime = dto.CookTime;
 
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        // PATCH : api/recipes/{id}/addstep
+        [HttpPatch("{id}/addstep")]
+        public async Task<IActionResult> AddStepToRecipe(int id, [FromBody] AddStepDto dto)
+        {
+            Recipe? recipe = await _context.Recipes
+                .Include(r => r.Steps)
+                .FirstOrDefaultAsync(r => r.Id == id);
+            if (recipe == null)
+                return NotFound();
+            if (recipe.Steps.Any(s => s.StepNumber == dto.StepNumber))
+                return Conflict("Step with this number already exists.");
+            RecipeStep step = new RecipeStep
+            {
+                StepNumber = dto.StepNumber,
+                Description = dto.Description
+            };
+            recipe.Steps.Add(step);
             await _context.SaveChangesAsync();
             return NoContent();
         }

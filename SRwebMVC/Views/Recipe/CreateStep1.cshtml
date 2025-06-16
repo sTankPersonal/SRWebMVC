@@ -1,0 +1,30 @@
+@model SRwebMVC.Models.ViewModels.RecipeCreateStep1ViewModel
+
+@{
+    ViewData["Title"] = "Create Recipe - Step 1";
+}
+
+<h2>Create Recipe - Step 1</h2>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="PrepTime" class="form-label"></label>
+        <input asp-for="PrepTime" class="form-control" type="number" min="0" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="CookTime" class="form-label"></label>
+        <input asp-for="CookTime" class="form-control" type="number" min="0" />
+    </div>
+    <button type="submit" class="btn btn-primary">Next: Add Details</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
