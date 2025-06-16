@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SRwebMVC.Data;
-using SRwebMVC.Models;
+using SRwebMVC.Entities;
 using SRwebMVC.Models.DTOs;
 /* Quantity API
  * GETS:

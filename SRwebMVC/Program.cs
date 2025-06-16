@@ -8,7 +8,11 @@ builder.Services.AddControllersWithViews();
 
 var connectionString = builder.Configuration.GetConnectionString("NeonConnection") ?? Environment.GetEnvironmentVariable("NEON_CONNECTION");
 
+
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
+
+var apiBaseUrl = builder.Configuration["ApiBaseUrl"] ?? Environment.GetEnvironmentVariable("API_BASE_URL");
+builder.Services.AddHttpClient("ApiClient", client => client.BaseAddress = new Uri(apiBaseUrl));
 
 var app = builder.Build();
 

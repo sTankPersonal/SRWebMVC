@@ -1,4 +1,6 @@
-﻿namespace SRwebMVC.Models
+﻿using SRwebMVC.Entities;
+
+namespace SRwebMVC.Entities
 {
     public class RecipeCategory
     {

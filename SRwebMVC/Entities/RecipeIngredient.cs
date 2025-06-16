@@ -1,4 +1,4 @@
-﻿namespace SRwebMVC.Models
+﻿namespace SRwebMVC.Entities
 {
     public class RecipeIngredient
     {

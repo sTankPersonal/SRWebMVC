@@ -1,5 +1,8 @@
-public class RecipeStepDto
+namespace SRwebMVC.Models.DTOs
 {
-    public int StepNumber { get; set; }
-    public string Description { get; set; } = string.Empty;
+    public class RecipeStepDto
+    {
+        public int StepNumber { get; set; }
+        public string Description { get; set; } = string.Empty;
+    }
 }

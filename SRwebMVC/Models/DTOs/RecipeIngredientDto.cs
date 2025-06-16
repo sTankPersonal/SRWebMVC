@@ -1,8 +1,11 @@
-public class RecipeIngredientDto
+namespace SRwebMVC.Models.DTOs
 {
-    public int IngredientId { get; set; }
-    public string IngredientName { get; set; } = String.Empty;
-    public decimal Amount { get; set; }
-    public int QuantityId { get; set; }
-    public string QuantityName { get; set; } = String.Empty;    
+    public class RecipeIngredientDto
+    {
+        public int IngredientId { get; set; }
+        public string IngredientName { get; set; } = String.Empty;
+        public decimal Amount { get; set; }
+        public int QuantityId { get; set; }
+        public string QuantityName { get; set; } = String.Empty;
+    }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SRwebMVC.Data;
-using SRwebMVC.Models;
+using SRwebMVC.Entities;
 using SRwebMVC.Models.DTOs;
 /* Recipes API
  * 
@@ -28,11 +28,11 @@ namespace SRwebMVC.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RecipesController : ControllerBase
+    public class RecipeController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public RecipesController(AppDbContext context)
+        public RecipeController(AppDbContext context)
         {
             _context = context;
         }

@@ -1,5 +1,8 @@
-public class CategoryDto
+namespace SRwebMVC.Models.DTOs
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = String.Empty;
+    public class CategoryDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = String.Empty;
+    }
 }

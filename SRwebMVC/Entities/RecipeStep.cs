@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SRwebMVC.Models
+namespace SRwebMVC.Entities
 {
     public class RecipeStep
     {

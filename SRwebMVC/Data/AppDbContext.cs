@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SRwebMVC.Entities;
 using SRwebMVC.Models;
 
 namespace SRwebMVC.Data

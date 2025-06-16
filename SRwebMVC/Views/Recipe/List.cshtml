@@ -1,0 +1,58 @@
+﻿@using SRwebMVC.Entities
+@using SRwebMVC.Models.DTOs
+@model List<SRwebMVC.Models.DTOs.RecipeDto>
+@{
+    ViewData["Title"] = "Recipe Lists";
+}
+
+<h2>Recipe List</h2>
+
+<a asp-controller="Recipe" asp-action="Create" class="btn btn-primary mb-3">
+    Create New Recipe
+</a>
+
+@if (Model.Count == 0)
+{
+    <p>No Recipies.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Recipe</th>
+                <th>Tags</th>
+                <th>Prep Time</th>
+                <th>Cook Time</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (RecipeDto recipe in Model)
+        {
+            <tr>
+                <td>@recipe.Name</td>
+                <td>
+                    @if (recipe.Categories != null && recipe.Categories.Count > 0)
+                    {
+                        foreach (RecipeCategoryDto rc in recipe.Categories)
+                        {
+                            @rc.CategoryName
+                            if (rc != recipe.Categories.Last())
+                            {
+                                @:,
+                            }
+                        }
+                    }
+                </td>
+                <td>@(recipe.PrepTime/60)h @(recipe.PrepTime%60)min</td>
+                <td>@(recipe.CookTime/60)h @(recipe.CookTime%60)min</td>
+                <td>
+                    <a asp-controller="Recipe" asp-action="Edit" asp-route-id="@recipe.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-controller="Recipe" asp-action="Delete" asp-route-id="@recipe.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

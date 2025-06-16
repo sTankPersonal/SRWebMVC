@@ -1,5 +1,8 @@
-public class IngredientDto
+namespace SRwebMVC.Models.DTOs
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = String.Empty;
+    public class IngredientDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = String.Empty;
+    }
 }

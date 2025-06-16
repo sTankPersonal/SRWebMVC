@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 
-namespace SRwebMVC.Models
+namespace SRwebMVC.Entities
 {
     public class Recipe
     {
