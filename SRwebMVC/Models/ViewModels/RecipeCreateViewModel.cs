@@ -16,15 +16,15 @@ namespace SRwebMVC.Models.ViewModels
         public int CookTime { get; set; }
 
         // Current selections
-        public List<CategoryDto> Categories { get; set; } = new();
+        public List<RecipeCategoryDto> Categories { get; set; } = new();
         public List<RecipeIngredientDto> Ingredients { get; set; } = new();
         public List<RecipeStepDto> Steps { get; set; } = new();
 
         // For adding new items
-        public int NewCategoryId { get; set; }
-        public int NewIngredientId { get; set; }
-        public decimal NewIngredientAmount { get; set; }
-        public int NewIngredientQuantityId { get; set; }
-        public string NewStepDescription { get; set; } = string.Empty;
+        //public int NewCategoryId { get; set; }
+        //public int NewIngredientId { get; set; }
+        //public decimal NewIngredientAmount { get; set; }
+        //public int NewIngredientQuantityId { get; set; }
+        //public string NewStepDescription { get; set; } = string.Empty;
     }
 }

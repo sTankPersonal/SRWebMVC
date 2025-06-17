@@ -39,7 +39,7 @@ namespace SRwebMVC.Controllers.API
         {
             IQueryable<Category> query = _context.Categories.AsQueryable();
             if (!string.IsNullOrWhiteSpace(categoryName))
-                query = query.Where(c => c.Name.Contains(categoryName));
+                query = query.Where(c => c.Name.ToLower().Contains(categoryName.ToLower()));
             query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             var result = await query

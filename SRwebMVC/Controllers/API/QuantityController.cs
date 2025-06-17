@@ -37,7 +37,7 @@ namespace SRwebMVC.Controllers.API
         {
             IQueryable<Quantity> query = _context.Quantities.AsQueryable();
             if (!string.IsNullOrWhiteSpace(quantityName))
-                query = query.Where(q => q.Name.Contains(quantityName));
+                query = query.Where(q => q.Name.ToLower().Contains(quantityName.ToLower()));
             query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             var result = await query

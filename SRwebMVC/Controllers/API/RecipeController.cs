@@ -23,6 +23,7 @@ using SRwebMVC.Models.DTOs;
  * Delete a recipe
  * Remove an ingredient from a recipe
  * Remove a category from a recipe
+ * Remove a step from a recipe
  * 
  */
 namespace SRwebMVC.Controllers.API
@@ -140,10 +141,7 @@ namespace SRwebMVC.Controllers.API
                 CookTime = dto.CookTime,
                 RecipeIngredients = new List<RecipeIngredient>(),
                 RecipeCategories = new List<RecipeCategory>(),
-                Steps = dto.Steps
-                    .OrderBy(s => s.StepNumber)
-                    .Select(s => new RecipeStep { StepNumber = s.StepNumber, Description = s.Description
-                }).ToList()
+                Steps = new List<RecipeStep>()
             };
             _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();
@@ -259,22 +257,28 @@ namespace SRwebMVC.Controllers.API
         [HttpPatch("{id}/addstep")]
         public async Task<IActionResult> AddStepToRecipe(int id, [FromBody] AddStepDto dto)
         {
-            Recipe? recipe = await _context.Recipes
+            var recipe = await _context.Recipes
                 .Include(r => r.Steps)
                 .FirstOrDefaultAsync(r => r.Id == id);
+
             if (recipe == null)
                 return NotFound();
-            if (recipe.Steps.Any(s => s.StepNumber == dto.StepNumber))
-                return Conflict("Step with this number already exists.");
-            RecipeStep step = new RecipeStep
+
+            int nextStepNumber = recipe.Steps.Any() ? recipe.Steps.Max(s => s.StepNumber) + 1 : 1;
+
+            var step = new RecipeStep
             {
-                StepNumber = dto.StepNumber,
-                Description = dto.Description
+                StepNumber = nextStepNumber,
+                Description = dto.Description,
+                RecipeId = id
             };
+
             recipe.Steps.Add(step);
             await _context.SaveChangesAsync();
+
             return NoContent();
         }
+
 
         // DELETE: api/recipes/5
         [HttpDelete("{id}")]
@@ -319,6 +323,19 @@ namespace SRwebMVC.Controllers.API
             _context.RecipeCategories.Remove(recipeCategory);
             await _context.SaveChangesAsync();
 
+            return NoContent();
+        }
+
+        //DELETE: api/recipes/{id}/removeinstruction/{instructionId}
+        [HttpDelete("{id}/removeinstruction/{instructionId}")]
+        public async Task<IActionResult> RemoveInstructionFromRecipe(int id, int instructionId)
+        {
+            RecipeStep? step = await _context.RecipeSteps
+                .FirstOrDefaultAsync(s => s.RecipeId == id && s.StepNumber == instructionId);
+            if (step == null)
+                return NotFound();
+            _context.RecipeSteps.Remove(step);
+            await _context.SaveChangesAsync();
             return NoContent();
         }
     }

@@ -38,7 +38,7 @@ namespace SRwebMVC.Controllers.API
         {
             IQueryable<Ingredient> query = _context.Ingredients.AsQueryable();
             if (!string.IsNullOrWhiteSpace(ingredientName))
-                query = query.Where(i => i.Name.Contains(ingredientName));
+                query = query.Where(i => i.Name.ToLower().Contains(ingredientName.ToLower()));
             query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             var result = await query

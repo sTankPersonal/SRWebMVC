@@ -92,8 +92,7 @@ namespace SRwebMVC.Controllers.View
             {
                 Name = vm.Name,
                 PrepTime = vm.PrepTime,
-                CookTime = vm.CookTime,
-                Steps = new List<RecipeStepDto>() // Empty for now
+                CookTime = vm.CookTime
             };
 
             var response = await _httpClient.PostAsJsonAsync("/api/recipe", createDto);
@@ -107,120 +106,150 @@ namespace SRwebMVC.Controllers.View
             int recipeId = createdRecipe?.Id ?? 0;
 
             // Redirect to step 2
-            return RedirectToAction("Attach", new { id = recipeId });
+            return RedirectToAction("Edit", new { id = recipeId });
         }
 
-        [HttpGet, ActionName("Attach")]
-        public async Task<IActionResult> CreateStep2(int id)
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
         {
             var recipe = await _httpClient.GetFromJsonAsync<RecipeDto>($"/api/recipe/{id}");
             if (recipe == null)
                 return NotFound();
-
-            var categories = await _httpClient.GetFromJsonAsync<List<CategoryDto>>("/api/category");
-            var ingredients = await _httpClient.GetFromJsonAsync<List<IngredientDto>>("/api/ingredient");
-            var quantities = await _httpClient.GetFromJsonAsync<List<QuantityDto>>("/api/quantity");
-
             var vm = new RecipeCreateViewModel
             {
                 Name = recipe.Name,
                 PrepTime = recipe.PrepTime,
                 CookTime = recipe.CookTime,
+                Categories = recipe.Categories ?? new List<RecipeCategoryDto>(),
+                Ingredients = recipe.Ingredients ?? new List<RecipeIngredientDto>(),
+                Steps = recipe.Steps ?? new List<RecipeStepDto>()
             };
-            ViewBag.RecipeId = id;
-            return View("CreateStep2", vm);
 
+            ViewBag.RecipeId = id;
+            return View("Edit", vm);
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> CreateStep2(int id, RecipeCreateViewModel vm)
-        //{
-        //    // Attach categories
-        //    foreach (var catId in vm.SelectedCategoryIds)
-        //        await _httpClient.PatchAsJsonAsync($"/api/recipe/{id}/addcategory", new AddCategoryDto { CategoryId = catId });
-
-        //    // Attach ingredients
-        //    foreach (var ing in vm.Ingredients)
-        //        await _httpClient.PatchAsJsonAsync($"/api/recipe/{id}/addingredient", new AddIngredientDto
-        //        {
-        //            IngredientId = ing.IngredientId,
-        //            Amount = ing.Amount,
-        //            QuantityId = ing.QuantityId
-        //        });
-
-        //    // Attach steps (optional: PATCH or PUT if you want to update steps)
-        //    // You can add a PATCH endpoint for steps if needed.
-
-        //    return RedirectToAction("Details", new { id });
-        //}
-
-        [HttpPost, ActionName("Attach")]
+        [HttpPost("Recipe/{id}/updaterecipe")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateStep2(int id, RecipeCreateViewModel vm, string action)
+        public async Task<IActionResult> UpdateRecipe(int id, [FromForm] EditRecipeDto dto)
         {
-            if (action == "addCategory")
+            await _httpClient.PutAsJsonAsync($"/api/recipe/{id}", dto);
+            return RedirectToAction("Edit", new { id });
+        }
+
+        [HttpPost("Recipe/{id}/addcategory")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddCategory(int id, AddCategoryDto dto)
+        {
+            await _httpClient.PatchAsJsonAsync($"/api/recipe/{id}/addcategory", dto);
+            return RedirectToAction("Edit", new { id });
+        }
+
+        [HttpPost("Recipe/{id}/addingredient")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddIngredient(int id, AddIngredientDto dto)
+        {
+            await _httpClient.PatchAsJsonAsync($"/api/recipe/{id}/addingredient", dto);
+            return RedirectToAction("Edit", new { id });
+        }
+
+        [HttpPost("Recipe/{id}/addstep")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddStep(int id, AddStepDto dto)
+        {
+            dto.RecipeId = id; // Ensure RecipeId is set in DTO
+            await _httpClient.PatchAsJsonAsync($"/api/recipe/{id}/addstep", dto);
+            return RedirectToAction("Edit", new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveIngredient(int id, int ingredientId)
+        {
+            var response = await _httpClient.DeleteAsync($"/api/recipe/{id}/removeingredient/{ingredientId}");
+            if (!response.IsSuccessStatusCode)
+                TempData["Error"] = "Failed to remove ingredient.";
+            return RedirectToAction("Edit", new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveCategory(int id, int categoryId)
+        {
+            var response = await _httpClient.DeleteAsync($"/api/recipe/{id}/removecategory/{categoryId}");
+            if (!response.IsSuccessStatusCode)
             {
-                var category = await _httpClient.GetFromJsonAsync<CategoryDto>($"/api/category/{vm.NewCategoryId}");
-                if (category != null && !vm.Categories.Any(c => c.Id == category.Id))
-                {
-                    vm.Categories.Add(category);
-                }
+                TempData["Error"] = "Failed to remove category.";
+            }
+            return RedirectToAction("Edit", new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveStep(int id, int instructionId)
+        {
+            var response = await _httpClient.DeleteAsync($"/api/recipe/{id}/removeinstruction/{instructionId}");
+            if (!response.IsSuccessStatusCode)
+            {
+                TempData["Error"] = "Failed to remove instruction.";
+            }
+            return RedirectToAction("Edit", new { id });
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateIngredient(int id, string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                TempData["Error"] = "Ingredient name is required.";
+                return RedirectToAction("Edit", new { id });
             }
 
-            else if (action == "addIngredient" && vm.NewIngredientId > 0 && vm.NewIngredientAmount > 0 && vm.NewIngredientQuantityId > 0)
-            {
-                var ingredient = await _httpClient.GetFromJsonAsync<IngredientDto>($"/api/ingredient/{vm.NewIngredientId}");
-                var quantity = await _httpClient.GetFromJsonAsync<QuantityDto>($"/api/quantity/{vm.NewIngredientQuantityId}");
-                if (ingredient != null && quantity != null)
-                {
-                    vm.Ingredients.Add(new RecipeIngredientDto
-                    {
-                        IngredientId = ingredient.Id,
-                        IngredientName = ingredient.Name,
-                        Amount = vm.NewIngredientAmount,
-                        QuantityId = quantity.Id,
-                        QuantityName = quantity.Name
-                    });
-                }
-            }
-            else if (action == "addStep" && !string.IsNullOrWhiteSpace(vm.NewStepDescription))
-            {
-                int nextStep = (vm.Steps.Count > 0) ? vm.Steps.Max(s => s.StepNumber) + 1 : 1;
-                vm.Steps.Add(new RecipeStepDto
-                {
-                    StepNumber = nextStep,
-                    Description = vm.NewStepDescription
-                });
-            }
-            else if (action == "finish")
-            {
-                // Attach categories
-                foreach (var category in vm.Categories)
-                    await _httpClient.PatchAsJsonAsync($"/api/recipe/{id}/addcategory", new AddCategoryDto { CategoryId = category.Id });
+            var payload = new { Name = name };
+            var response = await _httpClient.PostAsJsonAsync("/api/ingredient", payload);
 
-                // Attach ingredients
-                foreach (var ing in vm.Ingredients)
-                    await _httpClient.PatchAsJsonAsync($"/api/recipe/{id}/addingredient", new AddIngredientDto
-                    {
-                        IngredientId = ing.IngredientId,
-                        Amount = ing.Amount,
-                        QuantityId = ing.QuantityId
-                    });
+            if (!response.IsSuccessStatusCode)
+                TempData["Error"] = "Failed to create ingredient.";
 
-                // Attach steps (if you have a PATCH endpoint for steps, call it here)
+            return RedirectToAction("Edit", new { id });
+        }
 
-                return RedirectToAction("Details", new { id });
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateCategory(int id, string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                TempData["Error"] = "Category name is required.";
+                return RedirectToAction("Edit", new { id });
             }
 
-            ViewBag.RecipeId = id;
-            // Clear new item fields after add
-            vm.NewCategoryId = 0;
-            vm.NewIngredientId = 0;
-            vm.NewIngredientAmount = 0;
-            vm.NewIngredientQuantityId = 0;
-            vm.NewStepDescription = string.Empty;
-            return View("CreateStep2", vm);
+            var payload = new { Name = name };
+            var response = await _httpClient.PostAsJsonAsync("/api/category", payload);
+
+            if (!response.IsSuccessStatusCode)
+                TempData["Error"] = "Failed to create category.";
+
+            return RedirectToAction("Edit", new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateQuantity(int id, string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                TempData["Error"] = "Quantity name is required.";
+                return RedirectToAction("Edit", new { id });
+            }
+
+            var payload = new { Name = name };
+            var response = await _httpClient.PostAsJsonAsync("/api/quantity", payload);
+
+            if (!response.IsSuccessStatusCode)
+                TempData["Error"] = "Failed to create quantity.";
+
+            return RedirectToAction("Edit", new { id });
         }
     }
 }
