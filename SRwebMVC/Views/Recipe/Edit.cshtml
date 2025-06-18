@@ -48,7 +48,7 @@
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="CategoryId" id="NewCategoryId-hidden" />
                         <select id="NewCategoryId" class="form-select me-2"></select>
-                        <button type="submit" class="btn btn-outline-primary">Add</button>
+                        <button type="submit" class="btn btn-primary">Add</button>
                     </form>
                 </td>
             </tr>
@@ -70,7 +70,7 @@
         @Html.AntiForgeryToken()
         <label for="NewCategoryName" class="input-group-text"><strong>Create</strong></label>
         <input type="text" class="form-control" id="NewCategoryName" name="Name" placeholder="New Category" />
-        <button type="submit" class="btn btn-outline-success">Create</button>
+        <button type="submit" class="btn btn-success">Create</button>
     </form>
 </div>
 
@@ -103,7 +103,7 @@
                         <select id="NewIngredientQuantityId" class="form-select"></select>
                     </td>
                     <td>
-                        <button type="submit" class="btn btn-outline-primary">Add</button>
+                        <button type="submit" class="btn btn-primary">Add</button>
                     </td>
                 </form>
             </tr>
@@ -128,14 +128,14 @@
         @Html.AntiForgeryToken()
         <label for="NewIngredientName" class="input-group-text"><strong>Create Ingredient</strong></label>
         <input type="text" class="form-control" id="NewIngredientName" name="Name" placeholder="Ingredient Name" />
-        <button type="submit" class="btn btn-outline-success">Create</button>
+        <button type="submit" class="btn btn-success">Create</button>
     </form>
 
     <form asp-controller="Recipe" asp-action="CreateQuantity" asp-route-id="@recipeId" method="post" class="input-group">
         @Html.AntiForgeryToken()
         <label for="NewQuantityName" class="input-group-text"><strong>Create Quantity</strong></label>
         <input type="text" class="form-control" id="NewQuantityName" name="Name" placeholder="Quantity Name" />
-        <button type="submit" class="btn btn-outline-success">Create</button>
+        <button type="submit" class="btn btn-success">Create</button>
     </form>
 </div>
 
@@ -160,7 +160,7 @@
                         <input name="Description" class="form-control" placeholder="New instruction step..." />
                     </td>
                     <td>
-                        <button type="submit" class="btn btn-outline-primary">Add</button>
+                        <button type="submit" class="btn btn-primary">Add</button>
                     </td>
                 </form>
             </tr>
@@ -184,11 +184,9 @@
 
 <!-- FINAL ACTIONS -->
 <div class="mb-4">
-    <form asp-action="Finish" asp-route-id="@recipeId" method="post" class="d-inline">
-        @Html.AntiForgeryToken()
-        <button type="submit" class="btn btn-success me-2">Finish Editing</button>
-    </form>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipeId" class="btn btn-sm btn-primary">GoTo View Recipe</a>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+
 </div>
 
 @section Scripts {

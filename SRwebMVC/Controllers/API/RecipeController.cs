@@ -55,7 +55,7 @@ namespace SRwebMVC.Controllers.API
             if (!string.IsNullOrWhiteSpace(categoryName))
                 query = query.Where(r => r.RecipeCategories.Any(rc => rc.Category.Name.ToLower().Contains(categoryName.ToLower())));
 
-            query = query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+            query = query.OrderBy(r => r.Name).ThenBy(r => r.Id).Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
             var result = await query
                 .Select(r => new RecipeDto
