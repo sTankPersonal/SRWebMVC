@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
 
 namespace WebMVC.Domain.Entities
 {
@@ -11,8 +10,9 @@ namespace WebMVC.Domain.Entities
         public required string Name { get; set; }
         public int PrepTime { get; set; } //(Minutes)
         public int CookTime { get; set; } //(Minutes)
-        public List<RecipeIngredient> RecipeIngredients { get; set; } = new();
-        public List<RecipeCategory> RecipeCategories{ get; set; } = new();
-        public List<RecipeStep> Steps { get; set; } = new();
+        public int Servings { get; set; }
+        public List<RecipeIngredient> RecipeIngredients { get; set; } = [];
+        public List<RecipeCategory> RecipeCategories{ get; set; } = [];
+        public List<Instruction> Instructions { get; set; } = [];
     }
 }

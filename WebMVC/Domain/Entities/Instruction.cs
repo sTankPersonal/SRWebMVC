@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WebMVC.Domain.Entities
 {
-    public class RecipeStep
+    public class Instruction
     {
         [Key]
         public int Id { get; set; }

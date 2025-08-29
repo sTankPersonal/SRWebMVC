@@ -83,7 +83,6 @@
     <Folder Include="Application\DTOs\Recipe\" />
     <Folder Include="Application\ViewModels\Category\" />
     <Folder Include="Application\ViewModels\Ingredient\" />
-    <Folder Include="Application\ViewModels\Shared\" />
     <Folder Include="Application\ViewModels\Recipe\" />
     <Folder Include="API\Views\Ingredient\" />
     <Folder Include="API\Views\Category\" />

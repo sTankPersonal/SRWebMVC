@@ -12,7 +12,7 @@ namespace WebMVC.Infrastructure.Data
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public DbSet<RecipeCategory> RecipeCategories { get; set; }
         public DbSet<Quantity> Quantities { get; internal set; }
-        public DbSet<RecipeStep> RecipeSteps { get; set; }
+        public DbSet<Instruction> RecipeSteps { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -71,7 +71,7 @@ namespace WebMVC.Infrastructure.Data
             // ========================
             // RecipeStep relationship
             // ========================
-            modelBuilder.Entity<RecipeStep>()
+            modelBuilder.Entity<Instruction>()
                 .HasOne(rs => rs.Recipe)
                 .WithMany(r => r.Steps)
                 .HasForeignKey(rs => rs.RecipeId)
@@ -182,29 +182,29 @@ namespace WebMVC.Infrastructure.Data
             );
 
             // ===== RecipeSteps =====
-            modelBuilder.Entity<RecipeStep>().HasData(
+            modelBuilder.Entity<Instruction>().HasData(
                 // Ham and Cheese Sandwich (RecipeId = 1)
-                new RecipeStep { Id = 1, RecipeId = 1, StepNumber = 1, Description = "Lay out two slices of bread." },
-                new RecipeStep { Id = 2, RecipeId = 1, StepNumber = 2, Description = "Place ham on one slice of bread." },
-                new RecipeStep { Id = 3, RecipeId = 1, StepNumber = 3, Description = "Add cheese on top of the ham." },
-                new RecipeStep { Id = 4, RecipeId = 1, StepNumber = 4, Description = "Top with the second slice of bread." },
-                new RecipeStep { Id = 5, RecipeId = 1, StepNumber = 5, Description = "Toast the sandwich if desired." },
+                new Instruction { Id = 1, RecipeId = 1, StepNumber = 1, Description = "Lay out two slices of bread." },
+                new Instruction { Id = 2, RecipeId = 1, StepNumber = 2, Description = "Place ham on one slice of bread." },
+                new Instruction { Id = 3, RecipeId = 1, StepNumber = 3, Description = "Add cheese on top of the ham." },
+                new Instruction { Id = 4, RecipeId = 1, StepNumber = 4, Description = "Top with the second slice of bread." },
+                new Instruction { Id = 5, RecipeId = 1, StepNumber = 5, Description = "Toast the sandwich if desired." },
 
                 // Stovetop Rice (RecipeId = 2)
-                new RecipeStep { Id = 6, RecipeId = 2, StepNumber = 1, Description = "Rinse the rice under cold water." },
-                new RecipeStep { Id = 7, RecipeId = 2, StepNumber = 2, Description = "Add rice, water, and salt to a pot." },
-                new RecipeStep { Id = 8, RecipeId = 2, StepNumber = 3, Description = "Bring to a boil over high heat." },
-                new RecipeStep { Id = 9, RecipeId = 2, StepNumber = 4, Description = "Reduce heat to low, cover, and simmer until water is absorbed." },
-                new RecipeStep { Id = 10, RecipeId = 2, StepNumber = 5, Description = "Remove from heat and let stand covered for 5 minutes before serving." },
+                new Instruction { Id = 6, RecipeId = 2, StepNumber = 1, Description = "Rinse the rice under cold water." },
+                new Instruction { Id = 7, RecipeId = 2, StepNumber = 2, Description = "Add rice, water, and salt to a pot." },
+                new Instruction { Id = 8, RecipeId = 2, StepNumber = 3, Description = "Bring to a boil over high heat." },
+                new Instruction { Id = 9, RecipeId = 2, StepNumber = 4, Description = "Reduce heat to low, cover, and simmer until water is absorbed." },
+                new Instruction { Id = 10, RecipeId = 2, StepNumber = 5, Description = "Remove from heat and let stand covered for 5 minutes before serving." },
 
                 // Forward Sear Steak (RecipeId = 3)
-                new RecipeStep { Id = 11, RecipeId = 3, StepNumber = 1, Description = "Preheat oven to 250°F (120°C)." },
-                new RecipeStep { Id = 12, RecipeId = 3, StepNumber = 2, Description = "Season steak with salt and pepper." },
-                new RecipeStep { Id = 13, RecipeId = 3, StepNumber = 3, Description = "Place steak on a wire rack over a baking sheet." },
-                new RecipeStep { Id = 14, RecipeId = 3, StepNumber = 4, Description = "Roast in oven until desired internal temperature is reached." },
-                new RecipeStep { Id = 15, RecipeId = 3, StepNumber = 5, Description = "Heat oil in a cast iron skillet over high heat." },
-                new RecipeStep { Id = 16, RecipeId = 3, StepNumber = 6, Description = "Sear steak on both sides until a brown crust forms." },
-                new RecipeStep { Id = 17, RecipeId = 3, StepNumber = 7, Description = "Rest steak for 5 minutes before slicing and serving." }
+                new Instruction { Id = 11, RecipeId = 3, StepNumber = 1, Description = "Preheat oven to 250°F (120°C)." },
+                new Instruction { Id = 12, RecipeId = 3, StepNumber = 2, Description = "Season steak with salt and pepper." },
+                new Instruction { Id = 13, RecipeId = 3, StepNumber = 3, Description = "Place steak on a wire rack over a baking sheet." },
+                new Instruction { Id = 14, RecipeId = 3, StepNumber = 4, Description = "Roast in oven until desired internal temperature is reached." },
+                new Instruction { Id = 15, RecipeId = 3, StepNumber = 5, Description = "Heat oil in a cast iron skillet over high heat." },
+                new Instruction { Id = 16, RecipeId = 3, StepNumber = 6, Description = "Sear steak on both sides until a brown crust forms." },
+                new Instruction { Id = 17, RecipeId = 3, StepNumber = 7, Description = "Rest steak for 5 minutes before slicing and serving." }
             );
         }
     }

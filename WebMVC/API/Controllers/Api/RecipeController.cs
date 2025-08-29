@@ -142,7 +142,7 @@ namespace WebMVC.API.Controllers.Api
                 CookTime = dto.CookTime,
                 RecipeIngredients = new List<RecipeIngredient>(),
                 RecipeCategories = new List<RecipeCategory>(),
-                Steps = new List<RecipeStep>()
+                Steps = new List<Instruction>()
             };
             _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();
@@ -267,7 +267,7 @@ namespace WebMVC.API.Controllers.Api
 
             int nextStepNumber = recipe.Steps.Any() ? recipe.Steps.Max(s => s.StepNumber) + 1 : 1;
 
-            var step = new RecipeStep
+            var step = new Instruction
             {
                 StepNumber = nextStepNumber,
                 Description = dto.Description,
@@ -331,7 +331,7 @@ namespace WebMVC.API.Controllers.Api
         [HttpDelete("{id}/removeinstruction/{instructionId}")]
         public async Task<IActionResult> RemoveInstructionFromRecipe(int id, int instructionId)
         {
-            RecipeStep? step = await _context.RecipeSteps
+            Instruction? step = await _context.RecipeSteps
                 .FirstOrDefaultAsync(s => s.RecipeId == id && s.StepNumber == instructionId);
             if (step == null)
                 return NotFound();

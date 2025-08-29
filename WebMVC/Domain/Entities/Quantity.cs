@@ -8,7 +8,7 @@ namespace WebMVC.Domain.Entities
         public int Id { get; set; }
         [Required(ErrorMessage = "Please enter a name for the quantity.")]
         public required string Name { get; set; }
-        public List<RecipeIngredient> RecipeIngredients { get; set; } = new();
+        public List<RecipeIngredient> RecipeIngredients { get; set; } = [];
 
     }
 }
