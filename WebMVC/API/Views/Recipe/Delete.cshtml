@@ -1,0 +1,25 @@
+@using WebMVC.Contracts.DTOs.Recipe
+@model RecipeDto
+
+@{
+    ViewData["Title"] = "Delete Recipe";
+}
+
+<h2>Delete Recipe</h2>
+
+<h4>Are you sure you want to delete this recipe?</h4>
+<div>
+    <strong>@Model.Name</strong>
+    <ul>
+        <li>Prep Time: @(Model.PrepTime/60)h @(Model.PrepTime%60)min</li>
+        <li>Cook Time: @(Model.CookTime/60)h @(Model.CookTime%60)min</li>
+        <li>Categories: @string.Join(", ", Model.Categories.Select(c => c.CategoryName))</li>
+    </ul>
+</div>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

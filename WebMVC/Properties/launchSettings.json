@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "SRwebMVC": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:51877;http://localhost:51878"
+    }
+  }
+}

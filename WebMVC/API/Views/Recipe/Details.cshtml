@@ -1,0 +1,50 @@
+@using WebMVC.Contracts.DTOs.Recipe
+@model RecipeDto
+
+@{
+    ViewData["Title"] = "Recipe Details";
+}
+
+<h2>@Model.Name</h2>
+
+<p>
+    <strong>Prep Time:</strong> @(Model.PrepTime/60)h @(Model.PrepTime%60)min<br />
+    <strong>Cook Time:</strong> @(Model.CookTime/60)h @(Model.CookTime%60)min<br />
+    <strong>Categories:</strong> @string.Join(", ", Model.Categories.Select(c => c.CategoryName))
+</p>
+
+<h4>Ingredients</h4>
+@if (Model.Ingredients != null && Model.Ingredients.Count > 0)
+{
+    <ul>
+        @foreach (var ingredient in Model.Ingredients)
+        {
+            <li>
+                @ingredient.FormattedAmount @ingredient.QuantityName @ingredient.IngredientName
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No ingredients listed.</p>
+}
+
+<h4>Steps</h4>
+@if (Model.Steps != null && Model.Steps.Count > 0)
+{
+    <ol>
+        @foreach (var step in Model.Steps.OrderBy(s => s.StepNumber))
+        {
+            <li>@step.Description</li>
+        }
+    </ol>
+}
+else
+{
+    <p>No steps listed.</p>
+}
+
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edit</a>
+<a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
