@@ -3,8 +3,8 @@
     public class RecipeCategory
     {
         public int RecipeId { get; set; }
-        public required Recipe Recipe { get; set; }
+        public Recipe Recipe { get; set; } = null!;
         public int CategoryId { get; set; }
-        public required Category Category { get; set; }
+        public Category Category { get; set; } = null!;
     }
 }

@@ -1,16 +1,13 @@
-﻿namespace WebMVC.Domain.Entities
+﻿using WebMVC.Domain.ValueObjects;
+
+namespace WebMVC.Domain.Entities
 {
     public class RecipeIngredient
     {
         public int RecipeId { get; set; }
-        public required Recipe Recipe { get; set; }
-
+        public Recipe Recipe { get; set; } = null!;
         public int IngredientId { get; set; }
-        public required Ingredient Ingredient { get; set; }
-
-        public decimal Amount { get; set; }
-        public int QuantityId { get; set; }
-        public required Quantity Quantity { get; set; }
-               
+        public Ingredient Ingredient { get; set; } = null!;
+        public Measurement Measurement { get; set; } = null!;
     }
 }
