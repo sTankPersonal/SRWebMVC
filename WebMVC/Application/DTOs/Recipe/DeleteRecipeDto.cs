@@ -4,9 +4,8 @@ using WebMVC.Application.DTOs.Instruction;
 
 namespace WebMVC.Application.DTOs.Recipe
 {
-    public class RecipeDto
+    public class DeleteRecipeDto
     {
-        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int PrepTimeMinutes { get; set; }
         public int CookTimeMinutes { get; set; }
