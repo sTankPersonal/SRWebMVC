@@ -78,7 +78,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Application\DTOs\Recipe\" />
     <Folder Include="Application\ViewModels\Category\" />
     <Folder Include="Application\ViewModels\Ingredient\" />
     <Folder Include="API\Views\Ingredient\" />

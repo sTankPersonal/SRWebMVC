@@ -1,6 +1,4 @@
-﻿using WebMVC.Domain.ValueObjects;
-
-namespace WebMVC.Domain.Entities
+﻿namespace WebMVC.Domain.Entities
 {
     public class Recipe
     {
@@ -11,6 +9,6 @@ namespace WebMVC.Domain.Entities
         public int Servings { get; set; } = 0;
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = [];
         public ICollection<RecipeCategory> RecipeCategories{ get; set; } = [];
-        public ICollection<RecipeStep> RecipeSteps { get; set; } = [];
+        public ICollection<Instruction> Instructions { get; set; } = [];
     }
 }

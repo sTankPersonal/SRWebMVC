@@ -5,9 +5,9 @@ namespace WebMVC.Domain.Entities
     public class RecipeIngredient
     {
         public int RecipeId { get; set; }
-        public Recipe Recipe { get; set; } = null!;
+        public required Recipe Recipe { get; set; }
         public int IngredientId { get; set; }
-        public Ingredient Ingredient { get; set; } = null!;
-        public Measurement Measurement { get; set; } = null!;
+        public required Ingredient Ingredient { get; set; }
+        public required Measurement Measurement { get; set; }
     }
 }
