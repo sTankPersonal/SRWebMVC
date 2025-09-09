@@ -2,7 +2,7 @@
 using WebMVC.Application.Query;
 using WebMVC.Application.Query.Base;
 using WebMVC.Domain.Entities;
-using WebMVC.Domain.Interfaces;
+using WebMVC.Domain.Interfaces.Repositories;
 using WebMVC.Infrastructure.Data;
 
 namespace WebMVC.Infrastructure.Repositories

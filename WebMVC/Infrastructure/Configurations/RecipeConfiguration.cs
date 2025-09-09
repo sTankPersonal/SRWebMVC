@@ -26,15 +26,10 @@ namespace WebMVC.Infrastructure.Configurations
                 .WithOne(rc => rc.Recipe)
                 .HasForeignKey(rc => rc.RecipeId)
                 .OnDelete(DeleteBehavior.Cascade);
-            builder.OwnsMany(r => r.RecipeSteps, step =>
-            {
-                step.WithOwner().HasForeignKey("RecipeId");
-                step.Property(s => s.StepNumber).IsRequired();
-                step.Property(s => s.StepInstructions)
-                    .IsRequired()
-                    .HasMaxLength(1000);
-                step.HasKey("RecipeId", "StepNumber"); 
-            });
+            builder.HasMany(r => r.Instructions)
+                .WithOne(i => i.Recipe)
+                .HasForeignKey(i => i.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

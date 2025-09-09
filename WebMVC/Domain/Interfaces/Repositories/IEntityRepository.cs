@@ -1,6 +1,6 @@
 ﻿using WebMVC.Application.Query.Base;
 
-namespace WebMVC.Domain.Interfaces
+namespace WebMVC.Domain.Interfaces.Repositories
 {
     public interface IEntityRepository<T> where T : class
     {

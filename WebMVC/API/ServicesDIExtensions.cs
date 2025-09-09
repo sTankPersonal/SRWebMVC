@@ -1,7 +1,8 @@
 ﻿using WebMVC.Application.Services.Implementations;
 using WebMVC.Application.Services.Interfaces;
-using WebMVC.Domain.Interfaces;
-using WebMVC.Domain.Services;
+using WebMVC.Domain.Interfaces.Repositories;
+using WebMVC.Domain.Interfaces.Validators;
+using WebMVC.Domain.Services.Validators;
 using WebMVC.Infrastructure.Repositories;
 
 namespace WebMVC.API

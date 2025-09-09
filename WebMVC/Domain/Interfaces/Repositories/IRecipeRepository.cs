@@ -1,7 +1,7 @@
 ﻿using WebMVC.Application.Query;
 using WebMVC.Domain.Entities;
 
-namespace WebMVC.Domain.Interfaces
+namespace WebMVC.Domain.Interfaces.Repositories
 {
     public interface IRecipeRepository : IEntityRepository<Recipe>
     {
