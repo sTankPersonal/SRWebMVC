@@ -1,4 +1,6 @@
-﻿namespace WebMVC.Application.Services.Interfaces
+﻿using WebMVC.Application.DTOs.Category;
+
+namespace WebMVC.Application.Services.Interfaces
 {
     public interface ICategoryService
     {
@@ -8,6 +10,5 @@
         Task<CategoryDto> CreateCategoryAsync(CategoryCreateDto categoryCreateDto);
         Task<CategoryDto> UpdateCategoryAsync(int id, CategoryUpdateDto categoryUpdateDto);
         Task<bool> DeleteCategoryAsync(int id);
-
     }
 }
