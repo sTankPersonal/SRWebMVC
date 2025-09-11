@@ -1,14 +1,14 @@
 ﻿using WebMVC.Application.DTOs.Category;
+using WebMVC.Application.Query;
 
 namespace WebMVC.Application.Services.Interfaces
 {
     public interface ICategoryService
     {
-
-        Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync();
-        Task<CategoryDto> GetCategoryByIdAsync(int id);
-        Task<CategoryDto> CreateCategoryAsync(CategoryCreateDto categoryCreateDto);
-        Task<CategoryDto> UpdateCategoryAsync(int id, CategoryUpdateDto categoryUpdateDto);
-        Task<bool> DeleteCategoryAsync(int id);
+        Task<IEnumerable<CategoryDto>> GetAllAsync(CategoryQuery query);
+        Task<CategoryDto?> GetByIdAsync(int id);
+        Task<CategoryDto?> CreateAsync(CreateCategoryDto categoryCreateDto);
+        Task<CategoryDto?> UpdateAsync(int id, UpdateCategoryDto categoryUpdateDto);
+        Task DeleteAsync(int id);
     }
 }

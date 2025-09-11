@@ -11,7 +11,7 @@ namespace WebMVC.Infrastructure.Configurations
             builder.HasKey(i => i.Id);
             builder.Property(i => i.StepNumber)
                 .IsRequired();
-            builder.Property(i => i.Instructions)
+            builder.Property(i => i.Description)
                 .IsRequired()
                 .HasMaxLength(2000);
             builder.HasOne(i => i.Recipe)

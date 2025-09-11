@@ -18,8 +18,9 @@ namespace WebMVC.API.Controllers.Mvc
         [HttpGet("")]
         public async Task<ActionResult<IEnumerable<ListViewModel>>> GetRecipies(string? searchName, string? searchIngredient, string? searchCategory, int pageNumber = 1, int pageSize = 10)
         {
-            var recipes = await _recipeRepository.GetPaginatedAsync(pageNumber, pageSize);
-            return Ok(recipes);
+            //var recipes = await _recipeRepository.GetPaginatedAsync(pageNumber, pageSize);
+            //return Ok(recipes);
+            return Ok();
         }
 
 

@@ -18,9 +18,9 @@ namespace WebMVC.Infrastructure.Repositories
         public async Task<IEnumerable<Ingredient>> GetAllAsync(IngredientQuery query)
         {
             IQueryable<Ingredient> ingredient = _context.Ingredients.AsQueryable();
-            if (!string.IsNullOrWhiteSpace(query.SearchName))
+            if (!string.IsNullOrWhiteSpace(query.SearchText))
             {
-                ingredient = ingredient.Where(i => i.Name.Contains(query.SearchName, StringComparison.CurrentCultureIgnoreCase));
+                ingredient = ingredient.Where(i => i.Name.Contains(query.SearchText, StringComparison.CurrentCultureIgnoreCase));
             }
             return await ingredient.Skip((query.PageNumber - 1) * query.PageSize)
             .Take(query.PageSize).ToListAsync();

@@ -45,5 +45,9 @@ namespace WebMVC.Infrastructure.Repositories
             _context.Remove(category);
             await _context.SaveChangesAsync();
         }
+        public async Task<bool> ExistsByNameAsync(string name)
+        {
+            return await _context.Categories.AnyAsync(c => c.Name.Equals(name, StringComparison.CurrentCultureIgnoreCase));
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace WebMVC.Application.Query
 {
     public class IngredientQuery : PagedQuery
     {
-        public string? SearchName { get; set; }
+        public int StepNumber { get; set; }
+        public string? SearchText { get; set; }
     }
 }

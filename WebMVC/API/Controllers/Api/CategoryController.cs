@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WebMVC.Domain.Entities;
-using WebMVC.Infrastructure.Data;
-using WebMVC.Application.DTOs.Category;
 using WebMVC.Application.Services.Implementations;
+using WebMVC.Application.Services.Interfaces;
 
 /* Category API
  * 
@@ -25,14 +22,9 @@ namespace WebMVC.API.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CategoryController : ControllerBase
+    public class CategoryController (ICategoryService categoryService): ControllerBase
     {
-        private readonly CategoryService _categoryService;
-        public CategoryController(CategoryService categoryService)
-        {
-            _categoryService = categoryService;
-        }
-
+        private readonly ICategoryService _categoryService = categoryService;
 
     }
 }
