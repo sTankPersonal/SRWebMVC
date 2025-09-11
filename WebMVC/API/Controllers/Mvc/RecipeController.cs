@@ -1,26 +1,31 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebMVC.Application.Services.Interfaces;
 using WebMVC.Application.ViewModels.Recipe;
-using WebMVC.Infrastructure.Repositories;
+
 
 
 namespace WebMVC.API.Controllers.Mvc
 {
     [Route("[controller]")]
-    public class RecipeController : Controller
+    public class RecipeController (IRecipeService recipeService) : Controller
     {
-        private readonly RecipeRepository _recipeRepository;
-
-        public RecipeController(RecipeRepository recipeRepository)
-        {
-            _recipeRepository = recipeRepository;
-        }
+        private readonly IRecipeService _recipeService = recipeService;
 
         [HttpGet("")]
-        public async Task<ActionResult<IEnumerable<ListViewModel>>> GetRecipies(string? searchName, string? searchIngredient, string? searchCategory, int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> GetRecipes([FromQuery] string? searchName, [FromQuery] string? searchCategory, [FromQuery] string? searchIngredient, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
-            //var recipes = await _recipeRepository.GetPaginatedAsync(pageNumber, pageSize);
-            //return Ok(recipes);
-            return Ok();
+            ListViewModel model = new ()
+            {
+                Recipes = await _recipeService.GetAllAsync(new Application.Query.RecipeQuery
+                {
+                    SearchName = searchName,
+                    SearchCategory = searchCategory,
+                    SearchIngredient = searchIngredient,
+                    PageNumber = pageNumber,
+                    PageSize = pageSize
+                })
+            };
+            return View("List", model);
         }
 
 

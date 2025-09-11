@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebMVC.Application.DTOs.Recipe;
+using WebMVC.Application.Query;
 using WebMVC.Application.Services.Interfaces;
 /* Recipes API
  * 
@@ -27,8 +29,48 @@ namespace WebMVC.API.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RecipeController (IRecipeService recipeService): ControllerBase
+    public class RecipeController(IRecipeService recipeService) : ControllerBase
     {
         private readonly IRecipeService _recipeService = recipeService;
+        // GET: api/Recipe
+        [HttpGet("")]
+        public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipes([FromQuery] string? searchName, [FromQuery] string? searchCategory, [FromQuery] string? searchIngredient, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        {
+            return Ok(await _recipeService.GetAllAsync(new RecipeQuery
+            {
+                SearchName = searchName,
+                SearchCategory = searchCategory,
+                SearchIngredient = searchIngredient,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            }));
+        }
+        // GET: api/Recipe/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<RecipeDto>> GetRecipe(int id)
+        {
+            return Ok(await _recipeService.GetByIdAsync(id));
+        }
+        // POST: api/Recipe
+        [HttpPost("")]
+        public async Task<ActionResult<RecipeDto>> CreateRecipe([FromBody] CreateRecipeDto recipeCreateDto)
+        {
+            var createdRecipe = await _recipeService.CreateAsync(recipeCreateDto);
+            return CreatedAtAction(nameof(GetRecipe), new { id = createdRecipe.Id }, createdRecipe);
+        }
+        // PATCH: api/Recipe/5
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateRecipe(int id, [FromBody] UpdateRecipeDto recipeUpdateDto)
+        {
+            await _recipeService.UpdateAsync(id, recipeUpdateDto);
+            return NoContent();
+        }
+        // DELETE: api/Recipe/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRecipe(int id)
+        {
+            await _recipeService.DeleteAsync(id);
+            return NoContent();
+        }
     }
 }

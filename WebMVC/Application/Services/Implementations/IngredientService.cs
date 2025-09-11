@@ -21,18 +21,16 @@ namespace WebMVC.Application.Services.Implementations
                 Name = i.Name
             });
         }
-        public async Task<IngredientDto?> GetByIdAsync(int id)
+        public async Task<IngredientDto> GetByIdAsync(int id)
         {
-            Ingredient? ingredient = await _ingredientRepository.GetByIdAsync(id);
-            if (ingredient == null)
-                return null;
+            Ingredient? ingredient = await _ingredientRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Ingredient with id {id} not found.");
             return new IngredientDto
             {
                 Id = ingredient.Id,
                 Name = ingredient.Name
             };
         }
-        public async Task<IngredientDto?> CreateAsync(CreateIngredientDto ingredientCreateDto)
+        public async Task<IngredientDto> CreateAsync(CreateIngredientDto ingredientCreateDto)
         {
             Ingredient ingredient = new()
             {
@@ -46,11 +44,10 @@ namespace WebMVC.Application.Services.Implementations
                 Name = ingredient.Name
             };
         }
-        public async Task<IngredientDto?> UpdateAsync(int id, UpdateIngredientDto ingredientUpdateDto)
+        public async Task<IngredientDto> UpdateAsync(int id, UpdateIngredientDto ingredientUpdateDto)
         {
-            Ingredient? ingredient = await _ingredientRepository.GetByIdAsync(id);
-            if (ingredient == null)
-                return null;
+            Ingredient? ingredient = await _ingredientRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Ingredient with id {id} not found.");
+
             ingredient.Name = ingredientUpdateDto.Name;
             await _ingredientValidator.ValidateUpdateAsync(ingredient);
             await _ingredientRepository.UpdateAsync(ingredient);
@@ -62,9 +59,7 @@ namespace WebMVC.Application.Services.Implementations
         }
         public async Task DeleteAsync(int id)
         {
-            Ingredient? ingredient = await _ingredientRepository.GetByIdAsync(id);
-            if (ingredient == null)
-                return;
+            Ingredient? ingredient = await _ingredientRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Ingredient with id {id} not found.");
             await _ingredientValidator.ValidateDeleteAsync(ingredient);
             await _ingredientRepository.DeleteAsync(ingredient);
         }

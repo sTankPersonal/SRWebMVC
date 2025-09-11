@@ -5,6 +5,6 @@ namespace WebMVC.Domain.Interfaces.Repositories
 {
     public interface IInstructionRepository : IEntityRepository<Instruction>
     {
-        Task<IEnumerable<Instruction>> GetAllAsync(IngredientQuery query);
+        Task<IEnumerable<Instruction>> GetAllAsync(InstructionQuery query);
     }
 }

@@ -51,10 +51,9 @@ namespace WebMVC.Application.Services.Implementations
                 })],
             });
         }
-        public async Task<RecipeDto?> GetByIdAsync(int id)
+        public async Task<RecipeDto> GetByIdAsync(int id)
         {
-            Recipe? recipe = await _recipeRepository.GetByIdAsync(id);
-            if (recipe == null) return null;
+            Recipe recipe = await _recipeRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Recipe with ID {id} not found.");
             return new RecipeDto
             {
                 Id = recipe.Id,
@@ -87,7 +86,7 @@ namespace WebMVC.Application.Services.Implementations
             };
            
         }
-        public async Task<RecipeDto?> CreateAsync(CreateRecipeDto recipeCreateDto)
+        public async Task<RecipeDto> CreateAsync(CreateRecipeDto recipeCreateDto)
         {
             Recipe recipe = new()
             {
@@ -114,10 +113,9 @@ namespace WebMVC.Application.Services.Implementations
                 Instructions = [],
             };
         }
-        public async Task<RecipeDto?> UpdateAsync(int id, UpdateRecipeDto recipeUpdateDto)
+        public async Task<RecipeDto> UpdateAsync(int id, UpdateRecipeDto recipeUpdateDto)
         {
-            Recipe? recipe = await _recipeRepository.GetByIdAsync(id);
-            if (recipe == null) return null;
+            Recipe? recipe = await _recipeRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Recipe with ID {id} not found.");
             recipe.Name = recipeUpdateDto.Name;
             recipe.PrepTimeMinutes = recipeUpdateDto.PrepTimeMinutes;
             recipe.CookTimeMinutes = recipeUpdateDto.CookTimeMinutes;
@@ -157,8 +155,8 @@ namespace WebMVC.Application.Services.Implementations
         }
         public async Task DeleteAsync(int id)
         {
-            Recipe? recipe = await _recipeRepository.GetByIdAsync(id);
-            if (recipe == null) return;
+            Recipe recipe = await _recipeRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Recipe with ID {id} not found.");
+            await _recipeValidator.ValidateDeleteAsync(recipe);
             await _recipeRepository.DeleteAsync(recipe);
         }
     }

@@ -4,7 +4,6 @@ using WebMVC.Application.Services.Interfaces;
 using WebMVC.Domain.Entities;
 using WebMVC.Domain.Interfaces.Repositories;
 using WebMVC.Domain.Interfaces.Validators;
-using WebMVC.Infrastructure.Repositories;
 
 namespace WebMVC.Application.Services.Implementations
 {
@@ -23,11 +22,9 @@ namespace WebMVC.Application.Services.Implementations
                 StepNumber = i.StepNumber
             });
         }
-        public async Task<InstructionDto?> GetByIdAsync(int id)
+        public async Task<InstructionDto> GetByIdAsync(int id)
         {
-            Instruction? instruction = await _instructionRepository.GetByIdAsync(id);
-            if (instruction == null)
-                return null;
+            Instruction? instruction = await _instructionRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Instruction with ID {id} not found.");
             return new InstructionDto
             {
                 Id = instruction.Id,
@@ -35,12 +32,12 @@ namespace WebMVC.Application.Services.Implementations
                 StepNumber = instruction.StepNumber
             };
         }
-        public async Task<InstructionDto?> CreateAsync(CreateInstructionDto instructionCreateDto)
+        public async Task<InstructionDto> CreateAsync(CreateInstructionDto instructionCreateDto)
         {
             Instruction instruction = new()
             {
                 RecipeId = instructionCreateDto.recipeId,
-                Recipe = null!, // To be set by EF Core
+                Recipe = null!,                         // This will hopefully be set by EF Core when the instruction is added to the context. No promises
                 Description = instructionCreateDto.Description,
                 StepNumber = instructionCreateDto.StepNumber
             };
@@ -53,11 +50,9 @@ namespace WebMVC.Application.Services.Implementations
                 StepNumber = instruction.StepNumber
             };
         }
-        public async Task<InstructionDto?> UpdateAsync(int id, UpdateInstructionDto instructionUpdateDto)
+        public async Task<InstructionDto> UpdateAsync(int id, UpdateInstructionDto instructionUpdateDto)
         {
-            Instruction? instruction = await _instructionRepository.GetByIdAsync(id);
-            if (instruction == null)
-                return null;
+            Instruction? instruction = await _instructionRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Instruction with ID {id} not found.");
             instruction.Description = instructionUpdateDto.Description;
             instruction.StepNumber = instructionUpdateDto.StepNumber;
             await instructionValidator.ValidateUpdateAsync(instruction);
@@ -71,9 +66,8 @@ namespace WebMVC.Application.Services.Implementations
         }
         public async Task DeleteAsync(int id)
         {
-            Instruction? instruction = await _instructionRepository.GetByIdAsync(id);
-            if (instruction == null)
-                return;
+            Instruction? instruction = await _instructionRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Instruction with ID {id} not found.");
+            await instructionValidator.ValidateDeleteAsync(instruction);
             await _instructionRepository.DeleteAsync(instruction);
         }
     }

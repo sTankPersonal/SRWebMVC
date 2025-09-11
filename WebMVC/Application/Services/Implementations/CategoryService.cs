@@ -1,5 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-using WebMVC.Application.DTOs.Category;
+﻿using WebMVC.Application.DTOs.Category;
 using WebMVC.Application.Query;
 using WebMVC.Application.Services.Interfaces;
 using WebMVC.Domain.Entities;
@@ -22,18 +21,16 @@ namespace WebMVC.Application.Services.Implementations
                 Name = c.Name
             });
         }
-        public async Task<CategoryDto?> GetByIdAsync(int id)
+        public async Task<CategoryDto> GetByIdAsync(int id)
         {
-            Category? category = await _categoryRepository.GetByIdAsync(id);
-            if (category == null)
-                return null;
+            Category category = await _categoryRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Category with id {id} not found.");
             return new CategoryDto
             {
                 Id = category.Id,
                 Name = category.Name
             };
         }
-        public async Task<CategoryDto?> CreateAsync(CreateCategoryDto categoryCreateDto)
+        public async Task<CategoryDto> CreateAsync(CreateCategoryDto categoryCreateDto)
         {
             Category category = new ()
             {
@@ -48,11 +45,9 @@ namespace WebMVC.Application.Services.Implementations
                 Name = category.Name
             };
         }
-        public async Task<CategoryDto?> UpdateAsync(int id, UpdateCategoryDto categoryUpdateDto)
+        public async Task<CategoryDto> UpdateAsync(int id, UpdateCategoryDto categoryUpdateDto)
         {
-            Category? category = await _categoryRepository.GetByIdAsync(id);
-            if (category == null)
-                return null;
+            Category? category = await _categoryRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException($"Category with id {id} not found.");
 
             category.Name = categoryUpdateDto.Name;
             await _categoryValidator.ValidateUpdateAsync(category);
