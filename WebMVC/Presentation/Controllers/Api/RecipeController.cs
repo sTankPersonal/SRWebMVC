@@ -26,7 +26,7 @@ using WebMVC.Application.Services.Interfaces;
  * Remove a step from a recipe
  * 
  */
-namespace WebMVC.API.Controllers.Api
+namespace WebMVC.Presentation.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]

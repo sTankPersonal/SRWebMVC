@@ -5,7 +5,7 @@ using WebMVC.Application.DTOs.Shared;
 using WebMVC.Application.Query;
 using WebMVC.Application.Services.Interfaces;
 
-namespace WebMVC.API.Controllers.Api
+namespace WebMVC.Presentation.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]

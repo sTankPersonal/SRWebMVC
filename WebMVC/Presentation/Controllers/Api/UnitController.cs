@@ -20,7 +20,7 @@ using WebMVC.Application.Services.Interfaces;
  * Delete a unit by ID
  * 
  */
-namespace WebMVC.API.Controllers.Api
+namespace WebMVC.Presentation.Controllers.Api
 {
     public class UnitController (IUnitService unitService): ControllerBase
     {

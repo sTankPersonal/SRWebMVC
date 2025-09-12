@@ -19,7 +19,7 @@ using WebMVC.Application.Services.Interfaces;
  * Delete an ingredient by ID
  * 
  */
-namespace WebMVC.API.Controllers.Api
+namespace WebMVC.Presentation.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
