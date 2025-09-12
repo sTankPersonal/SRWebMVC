@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebMVC.Application.DTOs.Category;
+using WebMVC.Application.DTOs.Shared;
 using WebMVC.Application.Services.Implementations;
 using WebMVC.Application.Services.Interfaces;
 
@@ -29,7 +30,7 @@ namespace WebMVC.API.Controllers.Api
 
         // GET: api/Category
         [HttpGet("")]
-        public async Task<ActionResult<IEnumerable<CategoryDto>>> GetCategories([FromQuery] string? searchName, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<PagedResult<CategoryDto>>> GetCategories([FromQuery] string? searchName, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             return Ok(await _categoryService.GetAllAsync(new Application.Query.CategoryQuery
             {

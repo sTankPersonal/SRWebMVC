@@ -3,6 +3,7 @@ using WebMVC.Application.DTOs.Category;
 using WebMVC.Application.DTOs.Ingredient;
 using WebMVC.Application.DTOs.Instruction;
 using WebMVC.Application.DTOs.Recipe;
+using WebMVC.Application.DTOs.Shared;
 using WebMVC.Application.DTOs.Unit;
 using WebMVC.Application.Query;
 using WebMVC.Application.Services.Interfaces;
@@ -17,39 +18,45 @@ namespace WebMVC.Application.Services.Implementations
         private readonly IRecipeRepository _recipeRepository = recipeRepository;
         private readonly IRecipeValidator _recipeValidator = recipeValidator;
 
-        public async Task<IEnumerable<RecipeDto>> GetAllAsync(RecipeQuery query)
+        public async Task<PagedResult<RecipeDto>> GetAllAsync(RecipeQuery query)
         {
-            IEnumerable<Recipe> recipes = await _recipeRepository.GetAllAsync(query);
-            return recipes.Select(r => new RecipeDto
+            PagedResult<Recipe> recipes = await _recipeRepository.GetAllAsync(query);
+            return new PagedResult<RecipeDto>
             {
-                Id = r.Id,
-                Name = r.Name,
-                PrepTimeMinutes = r.PrepTimeMinutes,
-                CookTimeMinutes = r.CookTimeMinutes,
-                Servings = r.Servings,
-                Ingredients = [.. r.RecipeIngredients.Select(ri => new IngredientMeasurementDto
+                Items = recipes.Items.Select(r => new RecipeDto
                 {
-                    Id = ri.Ingredient.Id,
-                    Name = ri.Ingredient.Name,
-                    Amount = ri.Measurement.Amount,
-                    Unit = new UnitDto
+                    Id = r.Id,
+                    Name = r.Name,
+                    PrepTimeMinutes = r.PrepTimeMinutes,
+                    CookTimeMinutes = r.CookTimeMinutes,
+                    Servings = r.Servings,
+                    Ingredients = [.. r.RecipeIngredients.Select(ri => new IngredientMeasurementDto
                     {
-                        Id = ri.Measurement.Unit.Id,
-                        Name = ri.Measurement.Unit.Name,
-                    }
-                })],
-                Categories = [.. r.RecipeCategories.Select(rc => new CategoryDto
-                {
-                    Id = rc.Category.Id,
-                    Name = rc.Category.Name,
-                })],
-                Instructions = [.. r.Instructions.OrderBy(i => i.StepNumber).Select(i => new InstructionDto
-                {
-                    Id = i.Id,
-                    StepNumber = i.StepNumber,
-                    Description = i.Description,
-                })],
-            });
+                        Id = ri.Ingredient.Id,
+                        Name = ri.Ingredient.Name,
+                        Amount = ri.Measurement.Amount,
+                        Unit = new UnitDto
+                        {
+                            Id = ri.Measurement.Unit.Id,
+                            Name = ri.Measurement.Unit.Name,
+                        }
+                    })],
+                    Categories = [.. r.RecipeCategories.Select(rc => new CategoryDto
+                    {
+                        Id = rc.Category.Id,
+                        Name = rc.Category.Name,
+                    })],
+                    Instructions = [.. r.Instructions.OrderBy(i => i.StepNumber).Select(i => new InstructionDto
+                    {
+                        Id = i.Id,
+                        StepNumber = i.StepNumber,
+                        Description = i.Description,
+                    })],
+                }),
+                TotalCount = recipes.TotalCount,
+                PageNumber = recipes.PageNumber,
+                PageSize = recipes.PageSize
+            };
         }
         public async Task<RecipeDto> GetByIdAsync(int id)
         {

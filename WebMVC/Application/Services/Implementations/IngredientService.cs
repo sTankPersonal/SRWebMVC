@@ -1,4 +1,5 @@
 ﻿using WebMVC.Application.DTOs.Ingredient;
+using WebMVC.Application.DTOs.Shared;
 using WebMVC.Application.Query;
 using WebMVC.Application.Services.Interfaces;
 using WebMVC.Domain.Entities;
@@ -12,14 +13,20 @@ namespace WebMVC.Application.Services.Implementations
         private readonly IIngredientRepository _ingredientRepository = ingredientRepository;
         private readonly IIngredientValidator _ingredientValidator = ingredientValidator;
 
-        public async Task<IEnumerable<IngredientDto>> GetAllAsync(IngredientQuery query)
+        public async Task<PagedResult<IngredientDto>> GetAllAsync(IngredientQuery query)
         {
-            IEnumerable<Ingredient> ingredients = await _ingredientRepository.GetAllAsync(query);
-            return ingredients.Select(i => new IngredientDto
+            PagedResult<Ingredient> ingredients = await _ingredientRepository.GetAllAsync(query);
+            return new PagedResult<IngredientDto>
             {
-                Id = i.Id,
-                Name = i.Name
-            });
+                Items = ingredients.Items.Select(i => new IngredientDto
+                {
+                    Id = i.Id,
+                    Name = i.Name
+                }),
+                TotalCount = ingredients.TotalCount,
+                PageNumber = ingredients.PageNumber,
+                PageSize = ingredients.PageSize
+            };
         }
         public async Task<IngredientDto> GetByIdAsync(int id)
         {

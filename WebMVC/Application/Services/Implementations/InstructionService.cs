@@ -1,4 +1,5 @@
 ﻿using WebMVC.Application.DTOs.Instruction;
+using WebMVC.Application.DTOs.Shared;
 using WebMVC.Application.Query;
 using WebMVC.Application.Services.Interfaces;
 using WebMVC.Domain.Entities;
@@ -12,15 +13,21 @@ namespace WebMVC.Application.Services.Implementations
         private readonly IInstructionRepository _instructionRepository = instructionRepository;
         private readonly IInstructionValidator instructionValidator = instructionValidator;
 
-        public async Task<IEnumerable<InstructionDto>> GetAllAsync(InstructionQuery query)
+        public async Task<PagedResult<InstructionDto>> GetAllAsync(InstructionQuery query)
         {
-            IEnumerable<Instruction> instructions = await _instructionRepository.GetAllAsync(query);
-            return instructions.Select(i => new InstructionDto
+            PagedResult<Instruction> instructions = await _instructionRepository.GetAllAsync(query);
+            return new PagedResult<InstructionDto>
             {
-                Id = i.Id,
-                Description = i.Description,
-                StepNumber = i.StepNumber
-            });
+                Items = instructions.Items.Select(i => new InstructionDto
+                {
+                    Id = i.Id,
+                    Description = i.Description,
+                    StepNumber = i.StepNumber
+                }),
+                TotalCount = instructions.TotalCount,
+                PageNumber = instructions.PageNumber,
+                PageSize = instructions.PageSize
+            };
         }
         public async Task<InstructionDto> GetByIdAsync(int id)
         {

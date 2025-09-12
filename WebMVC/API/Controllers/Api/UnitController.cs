@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WebMVC.Application.DTOs.Shared;
 using WebMVC.Application.DTOs.Unit;
 using WebMVC.Application.Query;
 using WebMVC.Application.Services.Interfaces;
@@ -26,7 +27,7 @@ namespace WebMVC.API.Controllers.Api
         private readonly IUnitService _unitService = unitService;
         // GET: api/Unit
         [HttpGet("api/[controller]")]
-        public async Task<ActionResult<IEnumerable<UnitDto>>> GetUnits([FromQuery] string? searchName, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<PagedResult<UnitDto>>> GetUnits([FromQuery] string? searchName, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             return Ok(await _unitService.GetAllAsync(new UnitQuery
             {

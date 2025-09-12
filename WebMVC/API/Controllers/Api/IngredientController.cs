@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebMVC.Application.DTOs.Ingredient;
+using WebMVC.Application.DTOs.Shared;
 using WebMVC.Application.Query;
 using WebMVC.Application.Services.Interfaces;
 /* Ingredient API
@@ -28,7 +29,7 @@ namespace WebMVC.API.Controllers.Api
 
         // GET: api/Ingredient
         [HttpGet("")]
-        public async Task<ActionResult<IEnumerable<IngredientDto>>> GetIngredients([FromQuery] string? searchName, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<PagedResult<IngredientDto>>> GetIngredients([FromQuery] string? searchName, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             return Ok(await _ingredientService.GetAllAsync(new IngredientQuery
             {

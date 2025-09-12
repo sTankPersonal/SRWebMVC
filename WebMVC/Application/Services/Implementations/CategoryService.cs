@@ -1,4 +1,5 @@
 ﻿using WebMVC.Application.DTOs.Category;
+using WebMVC.Application.DTOs.Shared;
 using WebMVC.Application.Query;
 using WebMVC.Application.Services.Interfaces;
 using WebMVC.Domain.Entities;
@@ -12,14 +13,20 @@ namespace WebMVC.Application.Services.Implementations
         private readonly ICategoryRepository _categoryRepository = categoryRepository;
         private readonly ICategoryValidator _categoryValidator = categoryValidator;
 
-        public async Task<IEnumerable<CategoryDto>> GetAllAsync(CategoryQuery query)
+        public async Task<PagedResult<CategoryDto>> GetAllAsync(CategoryQuery query)
         {
-            IEnumerable<Category> categories = await _categoryRepository.GetAllAsync(query);
-            return categories.Select(c => new CategoryDto
+            PagedResult<Category> categories = await _categoryRepository.GetAllAsync(query);
+            return new PagedResult<CategoryDto>
             {
-                Id = c.Id,
-                Name = c.Name
-            });
+                Items = categories.Items.Select(c => new CategoryDto
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                }),
+                TotalCount = categories.TotalCount,
+                PageNumber = categories.PageNumber,
+                PageSize = categories.PageSize
+            };
         }
         public async Task<CategoryDto> GetByIdAsync(int id)
         {

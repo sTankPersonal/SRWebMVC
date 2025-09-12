@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WebMVC.Application.DTOs.Recipe;
+using WebMVC.Application.DTOs.Shared;
 using WebMVC.Application.Query;
 using WebMVC.Application.Services.Interfaces;
 /* Recipes API
@@ -34,7 +35,7 @@ namespace WebMVC.API.Controllers.Api
         private readonly IRecipeService _recipeService = recipeService;
         // GET: api/Recipe
         [HttpGet("")]
-        public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipes([FromQuery] string? searchName, [FromQuery] string? searchCategory, [FromQuery] string? searchIngredient, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<PagedResult<RecipeDto>>> GetRecipes([FromQuery] string? searchName, [FromQuery] string? searchCategory, [FromQuery] string? searchIngredient, [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             return Ok(await _recipeService.GetAllAsync(new RecipeQuery
             {
