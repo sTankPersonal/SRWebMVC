@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebMVC.Application.DTOs.Shared;
 using WebMVC.Application.Query;
 using WebMVC.Application.Query.Base;
 using WebMVC.Domain.Entities;
@@ -11,12 +12,21 @@ namespace WebMVC.Infrastructure.Repositories
     {
         private readonly AppDbContext _context = appDbContext;
 
-        public async Task<IEnumerable<Instruction>> GetAllAsync(PagedQuery query)
+        public async Task<PagedResult<Instruction>> GetAllAsync(PagedQuery query)
         {
-            return await _context.Instructions.Skip((query.PageNumber - 1) * query.PageSize)
-            .Take(query.PageSize).ToListAsync();
+            IQueryable<Instruction> instructions = _context.Instructions.AsQueryable();
+            return new PagedResult<Instruction>
+            {
+                Items = await instructions.Skip((query.PageNumber - 1) * query.PageSize)
+                .Skip((query.PageNumber - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .ToListAsync(),
+                TotalCount = await instructions.CountAsync(),
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize
+            };
         }
-        public async Task<IEnumerable<Instruction>> GetAllAsync(InstructionQuery query)
+        public async Task<PagedResult<Instruction>> GetAllAsync(InstructionQuery query)
         {
             IQueryable<Instruction> instructions = _context.Instructions.AsQueryable();
             if (query.StepNumber > 0)
@@ -27,8 +37,16 @@ namespace WebMVC.Infrastructure.Repositories
             {
                 instructions = instructions.Where(i => i.Description.Contains(query.SearchDescription, StringComparison.CurrentCultureIgnoreCase));
             }
-            return await instructions.Skip((query.PageNumber - 1) * query.PageSize)
-            .Take(query.PageSize).ToListAsync();
+            return new PagedResult<Instruction>
+            {
+                Items = await instructions.Skip((query.PageNumber - 1) * query.PageSize)
+                .Skip((query.PageNumber - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .ToListAsync(),
+                TotalCount = await instructions.CountAsync(),
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize
+            };
         }
         public async Task<Instruction?> GetByIdAsync(int id)
         {

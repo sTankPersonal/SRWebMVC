@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebMVC.Application.DTOs.Shared;
 using WebMVC.Application.Query;
 using WebMVC.Application.Query.Base;
 using WebMVC.Domain.Entities;
@@ -10,12 +11,21 @@ namespace WebMVC.Infrastructure.Repositories
     public class RecipeRepository(AppDbContext appDbContext) : IRecipeRepository
     {
         private readonly AppDbContext _context = appDbContext;
-        public async Task<IEnumerable<Recipe>> GetAllAsync(PagedQuery query)
+        public async Task<PagedResult<Recipe>> GetAllAsync(PagedQuery query)
         {
-            return await _context.Recipes.Skip((query.PageNumber - 1) * query.PageSize)
-            .Take(query.PageSize).ToListAsync();
+            IQueryable<Recipe> recipes = _context.Recipes.AsQueryable();
+            return new PagedResult<Recipe>
+            {
+                Items = await recipes.Skip((query.PageNumber - 1) * query.PageSize)
+                .Skip((query.PageNumber - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .ToListAsync(),
+                TotalCount = await recipes.CountAsync(),
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize
+            };
         }
-        public async Task<IEnumerable<Recipe>> GetAllAsync(RecipeQuery query)
+        public async Task<PagedResult<Recipe>> GetAllAsync(RecipeQuery query)
         {
             IQueryable<Recipe> recipes = _context.Recipes.AsQueryable();
             if (!string.IsNullOrWhiteSpace(query.SearchName))
@@ -38,8 +48,16 @@ namespace WebMVC.Infrastructure.Repositories
                     )
                 );
             }
-            return await recipes.Skip((query.PageNumber - 1) * query.PageSize)
-            .Take(query.PageSize).ToListAsync();
+            return new PagedResult<Recipe>
+            {
+                Items = await recipes.Skip((query.PageNumber - 1) * query.PageSize)
+                .Skip((query.PageNumber - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .ToListAsync(),
+                TotalCount = await recipes.CountAsync(),
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize
+            };
         }
         public async Task<Recipe?> GetByIdAsync(int id)
         {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebMVC.Application.DTOs.Shared;
 using WebMVC.Application.Query;
 using WebMVC.Application.Query.Base;
 using WebMVC.Domain.Entities;
@@ -11,20 +12,37 @@ namespace WebMVC.Infrastructure.Repositories
     {
         private readonly AppDbContext _context = context;
 
-        public async Task<IEnumerable<Unit>> GetAllAsync(PagedQuery query)
+        public async Task<PagedResult<Unit>> GetAllAsync(PagedQuery query)
         {
-            return await _context.Units.Skip((query.PageNumber - 1) * query.PageSize)
-            .Take(query.PageSize).ToListAsync();
+            IQueryable<Unit> units = _context.Units.AsQueryable();
+            return new PagedResult<Unit>
+            {
+                Items = await units.Skip((query.PageNumber - 1) * query.PageSize)
+                .Skip((query.PageNumber - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .ToListAsync(),
+                TotalCount = await units.CountAsync(),
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize
+            };
         }
-        public async Task<IEnumerable<Unit>> GetAllAsync(UnitQuery query)
+        public async Task<PagedResult<Unit>> GetAllAsync(UnitQuery query)
         {
             IQueryable<Unit> units = _context.Units.AsQueryable();
             if (!string.IsNullOrWhiteSpace(query.SearchName))
             {
                 units = units.Where(u => u.Name.Contains(query.SearchName, StringComparison.CurrentCultureIgnoreCase));
             }
-            return await units.Skip((query.PageNumber - 1) * query.PageSize)
-            .Take(query.PageSize).ToListAsync();
+            return new PagedResult<Unit>
+            {
+                Items = await units.Skip((query.PageNumber - 1) * query.PageSize)
+                .Skip((query.PageNumber - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .ToListAsync(),
+                TotalCount = await units.CountAsync(),
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize
+            };
         }
         public async Task<Unit?> GetByIdAsync(int id)
         {

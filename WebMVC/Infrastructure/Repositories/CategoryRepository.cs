@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using WebMVC.Application.DTOs.Shared;
 using WebMVC.Application.Query;
 using WebMVC.Application.Query.Base;
 using WebMVC.Domain.Entities;
@@ -11,21 +12,41 @@ namespace WebMVC.Infrastructure.Repositories
     {
         private readonly AppDbContext _context = context;
 
-        public async Task<IEnumerable<Category>> GetAllAsync(PagedQuery query)
+        public async Task<PagedResult<Category>> GetAllAsync(PagedQuery query)
         {
-            return await _context.Categories.Skip((query.PageNumber - 1) * query.PageSize)
-            .Take(query.PageSize).ToListAsync();
+            IQueryable<Category> categories = _context.Categories.AsNoTracking().AsQueryable();
+            return new PagedResult<Category>
+            {
+                Items = await categories
+                .Skip((query.PageNumber - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .ToListAsync(),
+                TotalCount = await categories.CountAsync(),
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize
+            };
         }
-        public async Task<IEnumerable<Category>> GetAllAsync(CategoryQuery query)
+
+        public async Task<PagedResult<Category>> GetAllAsync(CategoryQuery query)
         {
-            IQueryable<Category> categories = _context.Categories.AsQueryable();
+            IQueryable<Category> categories = _context.Categories.AsNoTracking().AsQueryable();
             if (!string.IsNullOrWhiteSpace(query.SearchName))
             {
                 categories = categories.Where(c => c.Name.Contains(query.SearchName, StringComparison.CurrentCultureIgnoreCase));
             }
-            return await categories.Skip((query.PageNumber - 1) * query.PageSize)
-            .Take(query.PageSize).ToListAsync();
+
+            return new PagedResult<Category>
+            {
+                Items = await categories
+                .Skip((query.PageNumber - 1) * query.PageSize)
+                .Take(query.PageSize)
+                .ToListAsync(),
+                TotalCount = await categories.CountAsync(),
+                PageNumber = query.PageNumber,
+                PageSize = query.PageSize
+            };
         }
+
         public async Task<Category?> GetByIdAsync(int id)
         {
             return await _context.Categories.FindAsync(id);
