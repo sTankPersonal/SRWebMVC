@@ -20,7 +20,7 @@ using WebMVC.Application.ViewModels.Recipe;
  * Get the Delete Recipe confirmation by ID.
  * Delete a recipe by ID
  */
-namespace WebMVC.API.Controllers.Mvc
+namespace WebMVC.Presentation.Endpoints.Http
 {
     [Route("[controller]")]
     public class RecipeController (IRecipeService recipeService) : Controller

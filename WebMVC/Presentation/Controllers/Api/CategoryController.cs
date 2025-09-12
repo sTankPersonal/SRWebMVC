@@ -20,7 +20,7 @@ using WebMVC.Application.Services.Interfaces;
  * Delete a category 
  * 
  */
-namespace WebMVC.API.Controllers.Api
+namespace WebMVC.Presentation.Controllers.Api
 {
     [Route("api/[controller]")]
     [ApiController]
