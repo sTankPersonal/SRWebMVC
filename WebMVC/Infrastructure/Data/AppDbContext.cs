@@ -3,7 +3,7 @@ using WebMVC.Domain.Entities;
 
 namespace WebMVC.Infrastructure.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<Ingredient> Ingredients => Set<Ingredient>();

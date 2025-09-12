@@ -1,7 +1,4 @@
-﻿@* @using WebMVC.Contracts.DTOs.Recipe
-@using WebMVC.Entities
-@using WebMVC.Models.DTOs
-@model WebMVC.Models.ViewModels.RecipeListViewModel
+﻿@model WebMVC.Application.ViewModels.Recipe.ListViewModel
 @{
     ViewData["Title"] = "Recipe Lists";
 }
@@ -11,13 +8,13 @@
 <form method="get" asp-action="Index" class="mb-3">
     <div class="row g-2">
         <div class="col">
-            <input type="text" name="searchName" value="@Model.SearchName" class="form-control" placeholder="Recipe Name" />
+            <input type="text" name="searchName" value="@Model.Query.SearchName" class="form-control" placeholder="Recipe Name" />
         </div>
         <div class="col">
-            <input type="text" name="searchIngredient" value="@Model.SearchIngredient" class="form-control" placeholder="Ingredient" />
+            <input type="text" name="searchIngredient" value="@Model.Query.SearchIngredient" class="form-control" placeholder="Ingredient" />
         </div>
         <div class="col">
-            <input type="text" name="searchCategory" value="@Model.SearchCategory" class="form-control" placeholder="Category" />
+            <input type="text" name="searchCategory" value="@Model.Query.SearchCategory" class="form-control" placeholder="Category" />
         </div>
         <div class="col-auto">
             <button type="submit" class="btn btn-primary">Search</button>
@@ -29,7 +26,7 @@
     Create New Recipe
 </a>
 
-@if (Model.Recipes.Count == 0)
+@if (!Model.Recipes.Items.Any())
 {
     <p>No Recipes.</p>
 }
@@ -46,16 +43,16 @@ else
             </tr>
         </thead>
         <tbody>
-        @foreach (RecipeDto recipe in Model.Recipes)
+        @foreach (var recipe in Model.Recipes.Items)
         {
             <tr>
                 <td>@recipe.Name</td>
                 <td>
                     @if (recipe.Categories != null && recipe.Categories.Count > 0)
                     {
-                        foreach (RecipeCategoryDto rc in recipe.Categories)
+                        foreach (var rc in recipe.Categories)
                         {
-                            @rc.CategoryName
+                            @rc.Name
                             if (rc != recipe.Categories.Last())
                             {
                                 @:,
@@ -63,8 +60,8 @@ else
                         }
                     }
                 </td>
-                <td>@(recipe.PrepTime/60)h @(recipe.PrepTime%60)min</td>
-                <td>@(recipe.CookTime/60)h @(recipe.CookTime%60)min</td>
+                <td>@(recipe.PrepTimeMinutes/60)h @(recipe.PrepTimeMinutes%60)min</td>
+                    <td>@(recipe.CookTimeMinutes / 60)h @(recipe.CookTimeMinutes % 60)min</td>
                 <td>
                     <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-sm btn-info">View</a>
                     <a asp-controller="Recipe" asp-action="Edit" asp-route-id="@recipe.Id" class="btn btn-sm btn-warning">Edit</a>
@@ -77,31 +74,31 @@ else
 
     <nav>
         <ul class="pagination">
-            @if (Model.HasPreviousPage)
+            @if (Model.Recipes.HasPreviousPage)
             {
                 <li class="page-item">
                     <a class="page-link"
                        asp-action="Index"
-                       asp-route-searchName="@Model.SearchName"
-                       asp-route-searchIngredient="@Model.SearchIngredient"
-                       asp-route-searchCategory="@Model.SearchCategory"
-                       asp-route-pageNumber="@(Model.PageNumber - 1)"
-                       asp-route-pageSize="@Model.PageSize">Previous</a>
+                       asp-route-searchName="@Model.Query.SearchName"
+                       asp-route-searchIngredient="@Model.Query.SearchIngredient"
+                       asp-route-searchCategory="@Model.Query.SearchCategory"
+                       asp-route-pageNumber="@(Model.Recipes.PageNumber - 1)"
+                       asp-route-pageSize="@Model.Recipes.PageSize">Previous</a>
                 </li>
             }
-            <li class="page-item active"><span class="page-link">@Model.PageNumber</span></li>
-            @if (Model.HasNextPage)
+            <li class="page-item active"><span class="page-link">@Model.Recipes.PageNumber</span></li>
+            @if (Model.Recipes.HasNextPage)
             {
                 <li class="page-item">
                     <a class="page-link"
                        asp-action="Index"
-                       asp-route-searchName="@Model.SearchName"
-                       asp-route-searchIngredient="@Model.SearchIngredient"
-                       asp-route-searchCategory="@Model.SearchCategory"
-                       asp-route-pageNumber="@(Model.PageNumber + 1)"
-                       asp-route-pageSize="@Model.PageSize">Next</a>
+                       asp-route-searchName="@Model.Query.SearchName"
+                       asp-route-searchIngredient="@Model.Query.SearchIngredient"
+                       asp-route-searchCategory="@Model.Query.SearchCategory"
+                       asp-route-pageNumber="@(Model.Recipes.PageNumber + 1)"
+                       asp-route-pageSize="@Model.Recipes.PageSize">Next</a>
                 </li>
             }
         </ul>
     </nav>
-} *@
+}

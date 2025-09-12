@@ -12,10 +12,6 @@ namespace WebMVC.Infrastructure.Configurations
             builder.Property(u => u.Name)
                 .IsRequired()
                 .HasMaxLength(100);
-            builder.HasMany(u => u.Measurements)
-                .WithOne(m => m.Unit)
-                .HasForeignKey(m => m.UnitId)
-                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

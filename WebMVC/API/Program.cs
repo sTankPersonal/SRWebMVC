@@ -1,26 +1,20 @@
-using Microsoft.EntityFrameworkCore;
-using WebMVC.Infrastructure.Data;
+using WebMVC.API.DIExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Services
 builder.Services.AddControllersWithViews();
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddWeb();
 
-var connectionString = builder.Configuration.GetConnectionString("NeonConnection") ?? Environment.GetEnvironmentVariable("NEON_CONNECTION");
-
-
-builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
-
-var apiBaseUrl = builder.Configuration["ApiBaseUrl"] ?? Environment.GetEnvironmentVariable("API_BASE_URL");
-builder.Services.AddHttpClient("ApiClient", client => client.BaseAddress = new Uri(apiBaseUrl));
-
+// Build app
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Middleware pipeline
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

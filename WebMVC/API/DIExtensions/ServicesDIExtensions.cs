@@ -1,11 +1,13 @@
-﻿using WebMVC.Application.Services.Implementations;
+﻿using Microsoft.AspNetCore.Mvc.Filters;
+using WebMVC.API.Filters;
+using WebMVC.Application.Services.Implementations;
 using WebMVC.Application.Services.Interfaces;
 using WebMVC.Domain.Interfaces.Repositories;
 using WebMVC.Domain.Interfaces.Validators;
 using WebMVC.Domain.Services.Validators;
 using WebMVC.Infrastructure.Repositories;
 
-namespace WebMVC.API
+namespace WebMVC.API.DIExtensions
 {
     public static class ServicesDIExtensions
     {
@@ -19,22 +21,12 @@ namespace WebMVC.API
             services.AddScoped<IRecipeValidator, RecipeValidator>();
             services.AddScoped<IUnitValidator, UnitValidator>();
 
-
-            // Infrastructure / Repositories
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<IIngredientRepository, IngredientRepository>();
-            services.AddScoped<IInstructionRepository, InstructionRepository>();
-            services.AddScoped<IRecipeRepository, RecipeRepository>();
-            services.AddScoped<IUnitRepository, UnitRepository>();
-
-
-            // Application Services
+            // Services
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IIngredientService, IngredientService>();
             services.AddScoped<IInstructionService, InstructionService>();
             services.AddScoped<IRecipeService, RecipeService>();
             services.AddScoped<IUnitService, UnitService>();
-
 
             return services;
         }
